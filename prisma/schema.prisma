@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String  @id @default(cuid())
+  email       String  @unique
+  displayName String? @map("display_name")
+  picktureUrl String? @map("pictureUrl")
+
+  hash   String   @map("password_hash")
+  hashRt String?  @map("refresh_token")
+  role   UserRole @default(user) @map("user_role")
+
+  accountStatus          AccountStatus @default(PENDING) @map("account_status")
+  emailVerified          Boolean       @default(false) @map("email_verified")
+  emailVerificationToken String?       @map("email_verification_token")
+  resetPasswordToken     String?       @map("reset_password_token")
+  resetPasswordExpiresAt DateTime?     @map("reset_password_expires_at")
+  twoFactorEnabled       Boolean       @default(false) @map("two_factor_enabled")
+  twoFactorCode          String?       @map("two_factor_code")
+  twoFactorExpiresAt     DateTime?     @map("two_factor_expires_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  accessLogs AccessLog[] @relation(name: "UserAccessLogs")
+  Session    Session[]
+
+  @@map("users") // Имя таблицы в базе данных
+}
+
+model AccessLog {
+  id        String       @id @default(cuid())
+  userId    String       @map("user_id")
+  eventType LogEventType @map("event_type")
+  ipAddress String?      @map("ip_address")
+  userAgent String?      @map("user_agent")
+  createdAt DateTime     @default(now()) @map("created_at")
+
+  user User? @relation(name: "UserAccessLogs", fields: [userId], references: [id])
+
+  @@map("access_logs") // Имя таблицы в базе данных
+}
+
+model Session {
+  id        String  @id @default(cuid())
+  userId    String  @map("user_id")
+  ipAddress String  @unique @map("ip_address")
+  userAgent String? @map("user_agent")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  expiresAt DateTime @map("expires_at")
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@map("sessions") // Имя таблицы в базе данных
+}
+
+enum UserRole {
+  user
+  admin
+}
+
+enum AccountStatus {
+  PENDING // Пользователь еще не подтвердил свою электронную почту
+  ACTIVE // Пользователь подтвердил свою электронную почту и может использовать сервис
+  SUSPENDED // Пользователь заблокирован, не может использовать сервис
+  DELETED // Пользователь удален, не может использовать сервис
+}
+
+enum LogEventType {
+  LOGIN_SUCCESS // Успешный вход в систему
+  LOGIN_FAIL // Неудачная попытка входа в систему
+  LOGOUT // Выход из системы
+  PASSWORD_RESET // Сброс пароля
+  PASSWORD_RESET_FAIL // Неудачная попытка сброса пароля
+}

@@ -1,0 +1,27 @@
+#config
+# Configuration management
+npm install --save @nestjs/config //Конфигурация приложения
+npm i --save class-validator class-transformer
+
+#swagger
+npm install --save @nestjs/swagger swagger-ui-express
+# OpenAPI documentation
+
+
+
+
+
+# Prisma setup
+npm install --save-dev prisma
+npx prisma init
+npm install @prisma/client
+npm install prettier-plugin-prisma
+
+# JWT
+npm install --save-dev @types/passport @types/passport-jwt
+npm install @nestjs/passport passport passport-jwt
+npm install --save @nestjs/jwt
+
+# Hashing passwords
+npm install --save-dev @types/bcrypt
+npm install bcrypt
