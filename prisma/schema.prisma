@@ -23,7 +23,7 @@ model User {
   resetPasswordToken     String?       @map("reset_password_token")
   resetPasswordExpiresAt DateTime?     @map("reset_password_expires_at")
   twoFactorEnabled       Boolean       @default(false) @map("two_factor_enabled")
-  twoFactorCode          String?       @map("two_factor_code")
+  twoFactorSecret          String?       @map("two_factor_secret")
   twoFactorExpiresAt     DateTime?     @map("two_factor_expires_at")
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -81,4 +81,5 @@ enum LogEventType {
   LOGOUT // Выход из системы
   PASSWORD_RESET // Сброс пароля
   PASSWORD_RESET_FAIL // Неудачная попытка сброса пароля
+  EMAIL_VERIFICATION // Подтверждение электронной почты
 }
