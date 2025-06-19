@@ -18,10 +18,15 @@ npm install @prisma/client
 npm install prettier-plugin-prisma
 
 # JWT
+
 npm install --save-dev @types/passport @types/passport-jwt
 npm install @nestjs/passport passport passport-jwt
 npm install --save @nestjs/jwt
 
 # Hashing passwords
-npm install --save-dev @types/bcrypt
-npm install bcrypt
+npm i bcryptjs
+
+#2FA
+npm install otplib
+npm install qrcode
+npm install --save-dev @types/qrcode
